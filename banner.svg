@@ -22,7 +22,7 @@
     @keyframes pkUp2  { 0%{transform:translateY(0);opacity:0.3} 100%{transform:translateY(-160px);opacity:0} }
     @keyframes cornerPulse { 0%,100%{opacity:0.45} 50%{opacity:0.8} }
     @keyframes gndPulse { 0%,100%{opacity:0.18} 50%{opacity:0.45} }
-    @keyframes glowPulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+    @keyframes glowPulse { 0%,100%{opacity:0.015} 50%{opacity:0.03} }
     @keyframes shadowBob { 0%,100%{transform:scaleX(1);opacity:0.12} 50%{transform:scaleX(0.7);opacity:0.06} }
 
     .runner-group { animation: run 5.5s linear infinite; }
