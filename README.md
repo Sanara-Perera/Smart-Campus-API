@@ -30,7 +30,7 @@
 
 You have been appointed as the **Lead Backend Architect** for the university's *Smart Campus* initiative. What began as a pilot project tracking individual temperature sensors has evolved into a **comprehensive campus-wide infrastructure system**.
 
-This API manages **thousands of Rooms** and the diverse array of **Sensors** deployed within them — CO2 monitors, occupancy trackers, smart lighting controllers — providing a seamless interface for campus facilities managers and automated building systems.
+This API manages **thousands of Rooms** and the diverse array of **Sensors** deployed within them - CO2 monitors, occupancy trackers, smart lighting controllers - providing a seamless interface for campus facilities managers and automated building systems.
 
 ---
 
@@ -51,8 +51,8 @@ java -jar target/smart-campus-api-1.0.0.jar
 curl http://localhost:8080/api/v1/
 ```
 
-> 🟢 **Server starts on** `http://localhost:8080/api/v1` — no external server required.  
-> 📦 **Pre-loaded with** 3 rooms, 5 sensors, and 3 sensor readings on every startup.
+> **Server starts on** [http://localhost:8080/api/v1](http://localhost:8080/api/v1) - no external server required.  
+>  **Pre-loaded with**  3 rooms, 5 sensors, and 3 sensor readings on every startup.
 
 ---
 
@@ -93,9 +93,6 @@ http://localhost:8080/api/v1/
 | 🟡 JSON | Jackson 2.15 | Java ↔ JSON serialisation |
 | 🔴 Build | Apache Maven 3.9 | Dependency management and packaging |
 | ⚪ Storage | ConcurrentHashMap | Thread-safe in-memory data store |
-
-> ❌ **No Spring Boot.** ❌ **No Database.** ❌ **No external server.**  
-> ✅ Pure JAX-RS, exactly as required by the module specification.
 
 ---
 
@@ -148,7 +145,7 @@ smart-campus-api/
 
 > Make sure the server is running before executing these commands.
 
-### 🔍 1 — API Discovery
+### 🔍 1 - API Discovery
 ```bash
 curl -X GET http://localhost:8080/api/v1/
 ```
@@ -166,7 +163,7 @@ curl -X GET http://localhost:8080/api/v1/
 
 ---
 
-### 🏠 2 — Create a Room
+### 🏠 2 - Create a Room
 ```bash
 curl -X POST http://localhost:8080/api/v1/rooms \
   -H "Content-Type: application/json" \
@@ -178,7 +175,7 @@ curl -X POST http://localhost:8080/api/v1/rooms \
 
 ---
 
-### 📡 3 — Register a Sensor
+### 📡 3 - Register a Sensor
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors \
   -H "Content-Type: application/json" \
@@ -187,14 +184,14 @@ curl -X POST http://localhost:8080/api/v1/sensors \
 
 ---
 
-### 🔎 4 — Filter Sensors by Type
+### 🔎 4 - Filter Sensors by Type
 ```bash
 curl -X GET "http://localhost:8080/api/v1/sensors?type=Temperature"
 ```
 
 ---
 
-### 📊 5 — Record a Sensor Reading
+### 📊 5 - Record a Sensor Reading
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings \
   -H "Content-Type: application/json" \
@@ -203,7 +200,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings \
 
 ---
 
-### ❌ 6 — Delete Room with Sensors (409 Conflict)
+### ❌ 6 - Delete Room with Sensors (409 Conflict)
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/rooms/LIB-301
 ```
@@ -217,7 +214,7 @@ curl -X DELETE http://localhost:8080/api/v1/rooms/LIB-301
 
 ---
 
-### 🚫 7 — Sensor with Invalid Room Reference (422)
+### 🚫 7 - Sensor with Invalid Room Reference (422)
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors \
   -H "Content-Type: application/json" \
@@ -233,7 +230,7 @@ curl -X POST http://localhost:8080/api/v1/sensors \
 
 ---
 
-### 🔧 8 — Post Reading to MAINTENANCE Sensor (403)
+### 🔧 8 - Post Reading to MAINTENANCE Sensor (403)
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors/OCC-001/readings \
   -H "Content-Type: application/json" \
@@ -274,60 +271,60 @@ Every error in this API returns a consistent JSON structure. No raw stack traces
 
 ---
 
-## 📝 Conceptual Report — Question Answers
+## 📝 Conceptual Report - Question Answers
 
 ---
 
-### Part 1, Q1 — JAX-RS Resource Class Lifecycle
+### Part 1, Question 1 - JAX-RS Resource Class Lifecycle
 
 By default, JAX-RS creates a **new instance** of each resource class for every incoming HTTP request — this is the **request-scoped lifecycle**. The instance is created, used to handle the request, and then discarded by the garbage collector.
 
-**Impact on data management:** Because each resource instance is fresh per request, storing rooms or sensors as instance variables would mean all data is lost after every request. To solve this, we use a **Singleton DataStore** — one shared instance for the entire server lifetime, implemented using the "Initialization-on-demand holder" pattern which is inherently thread-safe in Java.
+**Impact on data management:** Because each resource instance is fresh per request, storing rooms or sensors as instance variables would mean all data is lost after every request. To solve this, we use a **Singleton DataStore** - one shared instance for the entire server lifetime, implemented using the "Initialization-on-demand holder" pattern which is inherently thread-safe in Java.
 
-**Concurrency and thread safety:** Multiple HTTP requests arrive simultaneously on different threads. A plain `HashMap` under concurrent access causes race conditions and data corruption. We use `ConcurrentHashMap` which handles concurrent reads and writes safely through internal lock striping — no manual `synchronized` blocks needed, and no risk of data loss under load.
+**Concurrency and thread safety:** Multiple HTTP requests arrive simultaneously on different threads. A plain `HashMap` under concurrent access causes race conditions and data corruption. We use `ConcurrentHashMap` which handles concurrent reads and writes safely through internal lock striping - no manual `synchronized` blocks needed, and no risk of data loss under load.
 
 ---
 
-### Part 1, Q2 — HATEOAS and Hypermedia
+### Part 1, Question 2 - HATEOAS and Hypermedia
 
 **HATEOAS** (Hypermedia As The Engine Of Application State) means that API responses embed hyperlinks to related resources, allowing clients to navigate the API dynamically rather than relying on hardcoded URL knowledge.
 
 Our discovery endpoint returns a `_links` object containing URLs for all primary resource collections. **Benefits over static documentation:**
 
-1. **Self-documenting** — a new client can start at the root URL and discover all available resources by following links, just like a browser navigates a website without needing a sitemap.
-2. **Reduced coupling** — clients that follow links rather than hardcode URLs automatically adapt if path structures change, with no client-side code changes needed.
-3. **State-driven navigation** — advanced HATEOAS implementations include only links that are valid for the resource's current state, guiding clients toward valid operations only.
+1. **Self-documenting** - a new client can start at the root URL and discover all available resources by following links, just like a browser navigates a website without needing a sitemap.
+2. **Reduced coupling** - clients that follow links rather than hardcode URLs automatically adapt if path structures change, with no client-side code changes needed.
+3. **State-driven navigation** - advanced HATEOAS implementations include only links that are valid for the resource's current state, guiding clients toward valid operations only.
 
 This represents Level 3 (the highest level) of Richardson's REST Maturity Model.
 
 ---
 
-### Part 2, Q1 — Returning IDs vs Full Room Objects
+### Part 2, Question 1 - Returning IDs vs Full Room Objects
 
-**IDs only** (`["LIB-301", "LAB-101"]`): minimal bandwidth, but forces the client to make N additional `GET /rooms/{id}` requests — the "N+1 request problem" — wasting time and network round-trips.
+**IDs only** (`["LIB-301", "LAB-101"]`): minimal bandwidth, but forces the client to make N additional `GET /rooms/{id}` requests - the "N+1 request problem" - wasting time and network round-trips.
 
 **Full objects (our choice):** Higher single-response payload, but the client has everything it needs in one request. At campus scale (hundreds of rooms), the payload size is manageable and the reduction in round-trips significantly improves client performance. For datasets of millions of records, pagination alongside full objects would be introduced.
 
 ---
 
-### Part 2, Q2 — Idempotency of DELETE
+### Part 2, Question 2 - Idempotency of DELETE
 
-**Yes, DELETE is idempotent** — but idempotency refers to the server state, not the response code.
+**Yes, DELETE is idempotent** - but idempotency refers to the server state, not the response code.
 
 - **First DELETE** of `LIB-301` → room removed → **200 OK**
 - **Second DELETE** of `LIB-301` → already gone → **404 Not Found**
 
-The end server state is identical after both calls (the room does not exist). The different response codes are correct and expected per the HTTP specification. A client retrying a DELETE after a network timeout can safely interpret both 200 and 404 as confirmation that the room is gone — no accidental duplicate deletions are possible.
+The end server state is identical after both calls (the room does not exist). The different response codes are correct and expected per the HTTP specification. A client retrying a DELETE after a network timeout can safely interpret both 200 and 404 as confirmation that the room is gone - no accidental duplicate deletions are possible.
 
 ---
 
-### Part 3, Q1 — @Consumes(APPLICATION_JSON) and Media Type Mismatches
+### Part 3, Question 1 - @Consumes(APPLICATION_JSON) and Media Type Mismatches
 
 `@Consumes(MediaType.APPLICATION_JSON)` declares that our POST method only accepts requests with `Content-Type: application/json`. If a client sends `text/plain` or `application/xml`, JAX-RS intercepts the request **before it reaches our method** and automatically returns `HTTP 415 Unsupported Media Type`. Our resource method code never executes, protecting us from attempting to deserialise incompatible formats. The mirror annotation `@Produces(APPLICATION_JSON)` works in reverse — if a client sends `Accept: application/xml`, JAX-RS returns **406 Not Acceptable**.
 
 ---
 
-### Part 3, Q2 — @QueryParam vs Path Segment for Filtering
+### Part 3, Question 2 - @QueryParam vs Path Segment for Filtering
 
 **Our approach:** `GET /sensors?type=CO2` — **Alternative:** `GET /sensors/type/CO2`
 
@@ -335,62 +332,62 @@ The end server state is identical after both calls (the room does not exist). Th
 |---|---|---|
 | Optionality | `/sensors` works without filter | `/sensors/type/` is broken without value |
 | Semantic accuracy | Filtering a collection | Implies CO2 is a unique resource |
-| Composability | `?type=CO2&status=ACTIVE` | `/type/CO2/status/ACTIVE` — unreadable |
+| Composability | `?type=CO2&status=ACTIVE` | `/type/CO2/status/ACTIVE` - unreadable |
 | REST convention | Industry-standard for search/filter | Breaks path hierarchy semantics |
 
-The REST principle is that path segments *identify resources* (`/rooms/LIB-301`). Query parameters *filter or modify* a collection. CO2 is a filter criterion, not a resource — it belongs in a query parameter.
+The REST principle is that path segments *identify resources* (`/rooms/LIB-301`). Query parameters *filter or modify* a collection. CO2 is a filter criterion, not a resource - it belongs in a query parameter.
 
 ---
 
-### Part 4, Q1 — Benefits of the Sub-Resource Locator Pattern
+### Part 4, Question 1 - Benefits of the Sub-Resource Locator Pattern
 
 The sub-resource locator in `SensorResource.getReadingResource()` delegates the `/readings` path hierarchy to a dedicated `SensorReadingResource` class.
 
 **Benefits:**
-1. **Single Responsibility** — `SensorResource` manages sensors; reading history is a separate concern owned by its own dedicated class.
-2. **Manageability** — defining every nested path inside one massive controller produces hundreds of lines that become very difficult to navigate and debug at scale.
-3. **Independent testability** — `SensorReadingResource` can be unit tested by constructing it directly with a known `sensorId`, with no parent wiring required.
-4. **Context encapsulation** — the `sensorId` is passed through the constructor, so every method in the sub-resource operates in that sensor's context automatically.
-5. **Reusability** — the sub-resource could be returned by multiple parent locators with zero code duplication.
+1. **Single Responsibility** - `SensorResource` manages sensors; reading history is a separate concern owned by its own dedicated class.
+2. **Manageability** - defining every nested path inside one massive controller produces hundreds of lines that become very difficult to navigate and debug at scale.
+3. **Independent testability** - `SensorReadingResource` can be unit tested by constructing it directly with a known `sensorId`, with no parent wiring required.
+4. **Context encapsulation** - the `sensorId` is passed through the constructor, so every method in the sub-resource operates in that sensor's context automatically.
+5. **Reusability** - the sub-resource could be returned by multiple parent locators with zero code duplication.
 
 ---
 
-### Part 5, Q1 — Why HTTP 422 over 404 for Missing roomId Reference
+### Part 5, Question 1 - Why HTTP 422 over 404 for Missing roomId Reference
 
 When a sensor POST body contains `"roomId": "FAKE-999"` and that room does not exist:
 
-- **404** means: "The URL you requested does not exist." — Factually wrong. `/api/v1/sensors` is a perfectly valid URL.
+- **404** means: "The URL you requested does not exist." - Factually wrong. `/api/v1/sensors` is a perfectly valid URL.
 - **422 Unprocessable Entity** means: "Your request arrived correctly, the URL is valid, the JSON is syntactically correct, but the data contains a semantic problem."
 
-The problem is a **broken reference inside the payload** — a referential integrity violation. Using 422 precisely communicates "fix your data, not your URL," which is far more useful to the client developer than a misleading 404.
+The problem is a **broken reference inside the payload** - a referential integrity violation. Using 422 precisely communicates "fix your data, not your URL," which is far more useful to the client developer than a misleading 404.
 
 ---
 
-### Part 5, Q2 — Security Risks of Exposing Stack Traces
+### Part 5, Question 2 - Security Risks of Exposing Stack Traces
 
 Exposing raw Java stack traces to external API consumers is a serious cybersecurity vulnerability. An attacker can gather:
 
-1. **Technology fingerprinting** — exact package names reveal frameworks and versions (e.g., `jersey:2.41`), which can be cross-referenced with public CVE databases to find known exploits.
-2. **Internal code structure** — class names, method names, and line numbers reveal the application's internal architecture.
-3. **File paths** — absolute paths expose server directory structure, OS type, and sometimes usernames.
-4. **Business logic clues** — method names like `validateSensorBeforeSave()` reveal rules that can be deliberately targeted or bypassed.
-5. **Targeted exception attacks** — knowing which exception was thrown and from which line, an attacker crafts inputs to repeatedly trigger that code path, potentially causing denial of service.
+1. **Technology fingerprinting** - exact package names reveal frameworks and versions (e.g., `jersey:2.41`), which can be cross-referenced with public CVE databases to find known exploits.
+2. **Internal code structure** - class names, method names, and line numbers reveal the application's internal architecture.
+3. **File paths** - absolute paths expose server directory structure, OS type, and sometimes usernames.
+4. **Business logic clues** - method names like `validateSensorBeforeSave()` reveal rules that can be deliberately targeted or bypassed.
+5. **Targeted exception attacks** - knowing which exception was thrown and from which line, an attacker crafts inputs to repeatedly trigger that code path, potentially causing denial of service.
 
-**Our defence:** `GlobalExceptionMapper` catches all `Throwable` exceptions, logs the full stack trace server-side only, and returns a generic safe message to the client — zero internal information leaked.
+**Our defence:** `GlobalExceptionMapper` catches all `Throwable` exceptions, logs the full stack trace server-side only, and returns a generic safe message to the client - zero internal information leaked.
 
 ---
 
-### Part 5, Q3 — Filters vs Manual Logging in Resource Methods
+### Part 5, Q3 - Filters vs Manual Logging in Resource Methods
 
 **The problem with manual logging:** Inserting `Logger.info()` into every resource method duplicates the same boilerplate across every endpoint (violates DRY — Don't Repeat Yourself), risks being forgotten in new methods, and mixes infrastructure concerns with business logic.
 
 **Why JAX-RS filters are superior:**
 
-1. **Single point of control** — `LoggingFilter` is one class. Changing the log format means editing one file, not dozens.
-2. **Automatic coverage** — the filter is applied to every request and response by the framework. It is physically impossible to forget to log a new endpoint.
-3. **Separation of concerns** — resource methods focus purely on business logic; the filter handles observability independently.
-4. **Composability** — additional filters (authentication, rate limiting, CORS headers) can be added as separate classes without touching any resource method.
-5. **Consistent log structure** — every log line has the same format (`[REQUEST] --> GET /api/v1/rooms`), making log monitoring and analysis tools simple to configure.
+1. **Single point of control** - `LoggingFilter` is one class. Changing the log format means editing one file, not dozens.
+2. **Automatic coverage** - the filter is applied to every request and response by the framework. It is physically impossible to forget to log a new endpoint.
+3. **Separation of concerns** - resource methods focus purely on business logic; the filter handles observability independently.
+4. **Composability** - additional filters (authentication, rate limiting, CORS headers) can be added as separate classes without touching any resource method.
+5. **Consistent log structure** - every log line has the same format (`[REQUEST] --> GET /api/v1/rooms`), making log monitoring and analysis tools simple to configure.
 
 This is the same principle behind middleware in Express.js, interceptors in Spring, and decorators in Python — keep cross-cutting concerns separate from business logic.
 
