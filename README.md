@@ -255,7 +255,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/OCC-001/readings \
 curl -X GET http://localhost:8080/api/v1/sensors/CRASH-TEST
 ```
 
-![Global 500 Safety Net](Screenshot 2026-04-24 121424.png)
+![Global 500 Safety Net](500-safety-net.png)
 
 > 🔒 The GlobalExceptionMapper catches all unexpected errors and returns a safe
 > generic message — zero internal information is leaked to the client.
