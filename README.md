@@ -29,11 +29,13 @@
 ---
 
 ## 🌐 What is this?
-
+<div align="justify">
+ 
 You have been appointed as the **Lead Backend Architect** for the university's *Smart Campus* initiative. What began as a pilot project tracking individual temperature sensors has evolved into a **comprehensive campus-wide infrastructure system**.
 
 This API manages **thousands of Rooms** and the diverse array of **Sensors** deployed within them - CO2 monitors, occupancy trackers, smart lighting controllers - providing a seamless interface for campus facilities managers and automated building systems.
 
+</div>
 ---
 
 ## ⚡ Quick Start
@@ -292,6 +294,7 @@ Every error in this API returns a consistent JSON structure. No raw stack traces
 
 ---
 <div align="justify">
+ 
 ### Part 1 - Service Architecture & Setup
 
 **Question 1: Explain the default lifecycle of a JAX-RS Resource class. Is a new instance instantiated for every incoming request, or does the runtime treat it as a singleton? Elaborate on how this architectural decision impacts the way you manage and synchronize your in-memory data structures to prevent data loss or race conditions.**
@@ -419,7 +422,9 @@ Logging is a **cross-cutting concern** - it applies uniformly to every endpoint 
 - **DRY Principle:** Manual `Logger.info()` calls in every resource method duplicate the same boilerplate code across every endpoint, violating the Don't Repeat Yourself principle. A filter eliminates all duplication.
 
 This is the same principle behind middleware in Express.js, interceptors in Spring, and decorators in Python frameworks - cross-cutting concerns must be kept separate from business logic for maintainable, scalable API design.
+
 </div>
+
 ---
 
 <div align="center">
