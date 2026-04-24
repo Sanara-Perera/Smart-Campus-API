@@ -20,7 +20,7 @@
 ---
 
 **Module:** 5COSC022W - Client-Server Architectures &nbsp;|&nbsp; **University of Westminster**
-**Weight:** 60% of Final Grade &nbsp;|&nbsp; **Deadline:** 24th April 2026
+ &nbsp;|&nbsp; **Deadline:** 24th April 2026
 
 **Student:** I.A. Sanara Nimsathi Perera &nbsp;|&nbsp; **IIT ID:** 20240773 &nbsp;|&nbsp; **UOW ID:** w2120118
 
@@ -32,7 +32,7 @@
 
 You have been appointed as the **Lead Backend Architect** for the university's *Smart Campus* initiative. What began as a pilot project tracking individual temperature sensors has evolved into a **comprehensive campus-wide infrastructure system**.
 
-This API manages **thousands of Rooms** and the diverse array of **Sensors** deployed within them — CO2 monitors, occupancy trackers, smart lighting controllers — providing a seamless interface for campus facilities managers and automated building systems.
+This API manages **thousands of Rooms** and the diverse array of **Sensors** deployed within them - CO2 monitors, occupancy trackers, smart lighting controllers - providing a seamless interface for campus facilities managers and automated building systems.
 
 ---
 
@@ -53,7 +53,7 @@ java -jar target/smart-campus-api-1.0.0.jar
 curl http://localhost:8080/api/v1/
 ```
 
-> 🟢 **Server starts on** [http://localhost:8080/api/v1](http://localhost:8080/api/v1) — no external server required.
+> 🟢 **Server starts on** [http://localhost:8080/api/v1](http://localhost:8080/api/v1) - no external server required.
 > 📦 **Pre-loaded with** 3 rooms, 5 sensors, and 3 sensor readings on every startup.
 
 ---
@@ -89,12 +89,12 @@ http://localhost:8080/api/v1/
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| 🔵 Language | Java 17 | Core application logic |
-| 🟠 JAX-RS | Jersey 2.41 | REST framework (reference implementation) |
-| 🟢 HTTP Server | Grizzly (embedded) | Lightweight server, zero configuration |
-| 🟡 JSON | Jackson 2.15 | Java ↔ JSON serialisation |
-| 🔴 Build | Apache Maven 3.9 | Dependency management and packaging |
-| ⚪ Storage | ConcurrentHashMap | Thread-safe in-memory data store |
+|  Language | Java 17 | Core application logic |
+|  JAX-RS | Jersey 2.41 | REST framework (reference implementation) |
+|  HTTP Server | Grizzly (embedded) | Lightweight server, zero configuration |
+|  JSON | Jackson 2.15 | Java ↔ JSON serialisation |
+|  Build | Apache Maven 3.9 | Dependency management and packaging |
+|  Storage | ConcurrentHashMap | Thread-safe in-memory data store |
 
 > ❌ **No Spring Boot.** ❌ **No Database.** ❌ **No external server.**
 > ✅ Pure JAX-RS, exactly as required by the module specification.
@@ -284,14 +284,14 @@ Every error in this API returns a consistent JSON structure. No raw stack traces
 | `409` | Conflict | Deleting a room that still has sensors |
 | `415` | Unsupported Media Type | Client sent non-JSON content |
 | `422` | Unprocessable Entity | Sensor references a non-existent roomId |
-| `500` | Internal Server Error | Unexpected server error (safely masked) |
+| `500` | Internal Server Error | Unexpected server error  |
 
 ---
 
 ## 📝 Conceptual Report - Question Answers
 
 ---
-
+<div align="justify">
 ### Part 1 - Service Architecture & Setup
 
 **Question 1: Explain the default lifecycle of a JAX-RS Resource class. Is a new instance instantiated for every incoming request, or does the runtime treat it as a singleton? Elaborate on how this architectural decision impacts the way you manage and synchronize your in-memory data structures to prevent data loss or race conditions.**
@@ -330,7 +330,7 @@ This represents Level 3 - the highest level - of Richardson's REST Maturity Mode
 
 **Question 2: Is the DELETE operation idempotent in your implementation? Provide a detailed justification by describing what happens if a client mistakenly sends the exact same DELETE request for a room multiple times.**
 
-Yes, **DELETE is idempotent** in this implementation. Idempotency means that making the same request multiple times produces the same server state — it does not mean the HTTP response code will be identical each time.
+Yes, **DELETE is idempotent** in this implementation. Idempotency means that making the same request multiple times produces the same server state - it does not mean the HTTP response code will be identical each time.
 
 **Behaviour across multiple identical DELETE calls:**
 - **First DELETE** of room `LIB-301`: room is found and removed - returns **200 OK**
@@ -419,7 +419,7 @@ Logging is a **cross-cutting concern** - it applies uniformly to every endpoint 
 - **DRY Principle:** Manual `Logger.info()` calls in every resource method duplicate the same boilerplate code across every endpoint, violating the Don't Repeat Yourself principle. A filter eliminates all duplication.
 
 This is the same principle behind middleware in Express.js, interceptors in Spring, and decorators in Python frameworks - cross-cutting concerns must be kept separate from business logic for maintainable, scalable API design.
-
+</div>
 ---
 
 <div align="center">
