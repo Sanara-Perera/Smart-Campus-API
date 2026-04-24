@@ -19,7 +19,7 @@
 
 ---
 
-**Module:** 5COSC022W — Client-Server Architectures &nbsp;|&nbsp; **University of Westminster**
+**Module:** 5COSC022W - Client-Server Architectures &nbsp;|&nbsp; **University of Westminster**
 **Weight:** 60% of Final Grade &nbsp;|&nbsp; **Deadline:** 24th April 2026
 
 **Student:** I.A. Sanara Nimsathi Perera &nbsp;|&nbsp; **IIT ID:** 20240773 &nbsp;|&nbsp; **UOW ID:** w2120118
@@ -151,7 +151,7 @@ Smart-Campus-API/
 
 > Make sure the server is running before executing these commands.
 
-### 🔍 1 — API Discovery
+### 🔍 1 - API Discovery
 ```bash
 curl -X GET http://localhost:8080/api/v1/
 ```
@@ -169,7 +169,7 @@ curl -X GET http://localhost:8080/api/v1/
 
 ---
 
-### 🏠 2 — Create a Room
+### 🏠 2 - Create a Room
 ```bash
 curl -X POST http://localhost:8080/api/v1/rooms \
   -H "Content-Type: application/json" \
@@ -181,7 +181,7 @@ curl -X POST http://localhost:8080/api/v1/rooms \
 
 ---
 
-### 📡 3 — Register a Sensor
+### 📡 3 - Register a Sensor
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors \
   -H "Content-Type: application/json" \
@@ -190,14 +190,14 @@ curl -X POST http://localhost:8080/api/v1/sensors \
 
 ---
 
-### 🔎 4 — Filter Sensors by Type
+### 🔎 4 - Filter Sensors by Type
 ```bash
 curl -X GET "http://localhost:8080/api/v1/sensors?type=Temperature"
 ```
 
 ---
 
-### 📊 5 — Record a Sensor Reading
+### 📊 5 - Record a Sensor Reading
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings \
   -H "Content-Type: application/json" \
@@ -206,7 +206,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings \
 
 ---
 
-### ❌ 6 — Delete Room with Sensors (409 Conflict)
+### ❌ 6 - Delete Room with Sensors (409 Conflict)
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/rooms/LIB-301
 ```
@@ -220,7 +220,7 @@ curl -X DELETE http://localhost:8080/api/v1/rooms/LIB-301
 
 ---
 
-### 🚫 7 — Sensor with Invalid Room Reference (422)
+### 🚫 7 - Sensor with Invalid Room Reference (422)
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors \
   -H "Content-Type: application/json" \
@@ -236,7 +236,7 @@ curl -X POST http://localhost:8080/api/v1/sensors \
 
 ---
 
-### 🔧 8 — Post Reading to MAINTENANCE Sensor (403)
+### 🔧 8 - Post Reading to MAINTENANCE Sensor (403)
 ```bash
 curl -X POST http://localhost:8080/api/v1/sensors/OCC-001/readings \
   -H "Content-Type: application/json" \
@@ -249,7 +249,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/OCC-001/readings \
   "message": "Sensor OCC-001 is currently in 'MAINTENANCE' state and cannot accept new readings."
 }
 ```
-### 🛡️ 9 — Global Safety Net (500 — No Stack Trace Exposed)
+### 🛡️ 9 - Global Safety Net (500 - No Stack Trace Exposed)
 
 ```bash
 curl -X GET http://localhost:8080/api/v1/sensors/CRASH-TEST
@@ -260,7 +260,7 @@ curl -X GET http://localhost:8080/api/v1/sensors/CRASH-TEST
 </div>
 
 > 🔒 The GlobalExceptionMapper catches all unexpected errors and returns a safe
-> generic message — zero internal information is leaked to the client.
+> generic message - zero internal information is leaked to the client.
 ---
 
 ## 📋 Error Response Reference
