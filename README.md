@@ -36,6 +36,7 @@ You have been appointed as the **Lead Backend Architect** for the university's *
 This API manages **thousands of Rooms** and the diverse array of **Sensors** deployed within them - CO2 monitors, occupancy trackers, smart lighting controllers - providing a seamless interface for campus facilities managers and automated building systems.
 
 </div>
+
 ---
 
 ## ⚡ Quick Start
